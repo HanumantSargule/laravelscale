@@ -1,66 +1,145 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Service Marketplace Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A scalable Laravel-based service marketplace platform where providers can create listings, customers can search and send enquiries, and administrators can moderate content.
 
-## About Laravel
+This project demonstrates clean architecture, performance-focused database design, RESTful APIs, and scalable search implementation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🧱 Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel 11
+- MySQL
+- Bootstrap (Blade UI)
+- Sanctum (API Authentication)
+- Cursor Pagination
+- Service Layer Architecture
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🏗 Architecture Overview
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+The application follows a clean separation of concerns:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Presentation Layer:
+- Blade (Web UI)
+- RESTful API
 
-## Laravel Sponsors
+Application Layer:
+- Controllers (thin)
+- Form Requests (validation)
+- Policies (authorization)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Domain Layer:
+- Services (business logic)
+- Actions (write operations)
 
-### Premium Partners
+Data Layer:
+- Eloquent Models
+- Indexed database schema
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 👥 User Roles
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Guest (browse listings)
+- Customer (send enquiries)
+- Provider (create/manage listings)
+- Administrator (moderate listings)
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📦 Core Features
 
-## Security Vulnerabilities
+### Listings
+- Title & description
+- Category
+- Location (city)
+- Pricing (hourly / fixed)
+- Status:
+  - draft
+  - pending
+  - approved
+  - suspended
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Search & Discovery
+- Keyword search (Full-text index)
+- Filters:
+  - Category
+  - City
+  - Price range
+- Sorting:
+  - Relevance
+  - Newest
+  - Price
+- Cursor-based infinite scroll
 
-## License
+### Enquiry Flow
+- Customers send enquiry to providers
+- Providers reply via internal messaging
+- No direct email exposure
+- Thread-based conversations
+- Role-based access control
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🔍 Scalability Strategy
+
+To support millions of listings:
+
+- Composite indexing (status + created_at)
+- Indexes on price, city, foreign keys
+- Full-text search on title & description
+- Cursor pagination (no OFFSET)
+- Optimized select queries
+- Service-based reusable search logic
+
+Future scalability improvements:
+- Redis caching
+- Elasticsearch integration
+- Read replicas
+- Queue-based indexing
+
+---
+
+## 🔐 Security
+
+- Sanctum API authentication
+- Policy-based authorization
+- Role-based enquiry access
+- No email exposure between users
+- Input validation via FormRequest
+- Middleware protection for admin routes
+
+---
+
+## 🌐 RESTful API Endpoints
+
+### Public
+
+GET /api/listings  
+GET /api/listings/{id}
+
+### Protected (Sanctum Required)
+
+POST /api/listings  
+PUT /api/listings/{id}  
+DELETE /api/listings/{id}
+
+POST /api/listings/{listing}/enquiries  
+GET /api/enquiries/{id}  
+POST /api/enquiries/{id}/reply  
+
+---
+
+## 📄 Web Routes
+
+GET / → Loads listing page (Blade)  
+Listings loaded dynamically via API using infinite scroll.
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone Repository
+
