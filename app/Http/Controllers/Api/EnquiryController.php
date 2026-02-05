@@ -64,4 +64,18 @@ class ListingController extends Controller
             'message' => 'Listing deleted'
         ]);
     }
+    public function contact(Request $request, Listing $listing)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+            'email' => 'required|email',
+        ]);
+
+        // Send contact notification to listing provider
+        // Notification::send($listing->provider, new ListingInquiry($request->all()));
+
+        return response()->json([
+            'message' => 'Inquiry sent to provider'
+        ], 201);
+    }
 }

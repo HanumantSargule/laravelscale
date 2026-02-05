@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
 <h3>Inbox</h3>
 
 @foreach($enquiries as $enquiry)
